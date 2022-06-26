@@ -392,7 +392,7 @@ void IteratorAdvanceImpl(Iterator iter, Distance n, std::random_access_iterator_
 template<typename T>
 class Counter {
     public:
-        inline static int count = 0;
+        int count = 0;
     Counter() {
         count++;
     }
@@ -409,7 +409,7 @@ class Counter {
 /*提供的测试类*/
 class MyTestCls: public Counter<MyTestCls> {
 
-};
+}
 /**/
 /**/
 int main() {
@@ -459,11 +459,6 @@ int main() {
 //     std::cout << "print vec" << std::endl;
 //     printcontainer(vec_int);
     /*打印任意的stl结束*/
-   {
-        MyTestCls a;
-        MyTestCls b;
-        std::cout << MyTestCls::count << std::endl;
-   } 
-   std::cout << MyTestCls::count << std::endl; 
+    MyTestCls
 }
 

@@ -391,79 +391,52 @@ void IteratorAdvanceImpl(Iterator iter, Distance n, std::random_access_iterator_
 /*实现计数器，记录这个类的实例目前现存多少个*/
 template<typename T>
 class Counter {
-    public:
-        inline static int count = 0;
-    Counter() {
-        count++;
-    }
-    Counter(const Counter&) {
-        count++;
-    }
-    Counter(Counter&&) {
-        count++;
-    }
-    ~Counter() {
-        count--;
-    }
+    
 };
-/*提供的测试类*/
-class MyTestCls: public Counter<MyTestCls> {
-
-};
-/**/
 /**/
 int main() {
     /*测试accm*/
-//     int a[] = {1, 2, 3, 4, 5};
-//     std::cout << accum(a, a + (sizeof(a) / sizeof(a[0]))) / (sizeof(a) / sizeof(a[0])) << std::endl;
-//     char st[] = "templates";
-//     std::cout << accum(st, st + sizeof(st) - 1) << std::endl; // / (sizeof(st) - 1) << std::endl;
-//     BigInt arr[] = {BigInt(1), BigInt(2), BigInt(3), BigInt(4), BigInt(5)};
-//     std::cout << accum(arr, arr + 5) << std::endl;
-//     // std::cout << (-49) / 9;
-//     /*测试accm end*/
-//     Stack<int>         intStack;       // stack of ints
-//     Stack<std::string> stringStack;    // stack of strings
+    int a[] = {1, 2, 3, 4, 5};
+    std::cout << accum(a, a + (sizeof(a) / sizeof(a[0]))) / (sizeof(a) / sizeof(a[0])) << std::endl;
+    char st[] = "templates";
+    std::cout << accum(st, st + sizeof(st) - 1) << std::endl; // / (sizeof(st) - 1) << std::endl;
+    BigInt arr[] = {BigInt(1), BigInt(2), BigInt(3), BigInt(4), BigInt(5)};
+    std::cout << accum(arr, arr + 5) << std::endl;
+    // std::cout << (-49) / 9;
+    /*测试accm end*/
+    Stack<int>         intStack;       // stack of ints
+    Stack<std::string> stringStack;    // stack of strings
   
-//     // manipulate int stack
-//     intStack.push(7);
-//     std::cout << intStack.top() << '\n';
+    // manipulate int stack
+    intStack.push(7);
+    std::cout << intStack.top() << '\n';
   
-//     // manipulate string stack
-//     stringStack.push("hello");
-//     std::cout << stringStack.top() << '\n';
-//     stringStack.pop();
-//     Stack<double> doublestack;
-//     doublestack.push(2.5);
-//     intStack = doublestack;
-//     std::cout << intStack.top() << '\n';
-//     // intStack = stringStack;
-//     /*测试issametype*/
-//     std::cout << issametype<int, int>::value << '\n';
-//     /*测试issametype*/
-// /*My tuple*/
-//     // Check(Func);
-//     // Check(Func);//error
-//     // Check(*Func);//error
-//     // std::vector<double> vec;
-//     // printele_type(vec);
+    // manipulate string stack
+    stringStack.push("hello");
+    std::cout << stringStack.top() << '\n';
+    stringStack.pop();
+    Stack<double> doublestack;
+    doublestack.push(2.5);
+    intStack = doublestack;
+    std::cout << intStack.top() << '\n';
+    // intStack = stringStack;
+    /*测试issametype*/
+    std::cout << issametype<int, int>::value << '\n';
+    /*测试issametype*/
+/*My tuple*/
+    // Check(Func);
+    // Check(Func);//error
+    // Check(*Func);//error
+    // std::vector<double> vec;
+    // printele_type(vec);
     
-//     /*测试空类的大小*/
-//     std::cout << sizeof(Empty) << std::endl;
-//     std::cout << sizeof(Empty1) << std::endl;
-//     std::cout << sizeof(Empty2) << std::endl;
-//     /*测试空类的大小结束*/
-
-//     /*打印任意的stl*/
-//     std::vector<int> vec_int{1, 2, 3};
-//     std::cout << "print vec" << std::endl;
-//     printcontainer(vec_int);
-    /*打印任意的stl结束*/
-   {
-        MyTestCls a;
-        MyTestCls b;
-        std::cout << MyTestCls::count << std::endl;
-   } 
-   std::cout << MyTestCls::count << std::endl; 
+    /*测试空类的大小*/
+    std::cout << sizeof(Empty) << std::endl;
+    std::cout << sizeof(Empty1) << std::endl;
+    std::cout << sizeof(Empty2) << std::endl;
+    /*测试空类的大小结束*/
+    std::vector<int> vec_int{1, 2, 3};
+    std::cout << "print vec" << std::endl;
+    printcontainer(vec_int);
 }
 

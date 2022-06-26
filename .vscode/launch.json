@@ -1,0 +1,63 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "(gdb) Launch",
+            //"preLaunchTask": "C/C++: clang++-10 生成活动文件",//调试前执行的任务，就是之前配置的tasks.json中的label字段
+            "type": "cppdbg",//配置类型，只能为cppdbg
+            "request": "launch",//请求配置类型，可以为launch（启动）或attach（附加）
+            //"program": "/home/lgc/CMU15445_20Fall_repo/bustub-private_20Fall/build/test/parallel_buffer_pool_manager_test",//"${fileDirname}\\${fileBasenameNoExtension}.o",//调试程序的路径名称
+            //"program": "/home/lgc/CMU15445_20Fall_repo/bustub-private_20Fall/build/test/buffer_pool_manager_instance_test", 
+            //"program": "/home/lgc/CMU15445_20Fall_repo/bustub-private_20Fall/build/test/lru_replacer_test", 
+            "program": "/home/lgc/parallel_course/hw02/build/main",
+            "args": [],//调试传递参数
+            "stopAtEntry": false,
+            // "coreDumpPath": "/var/log/apport.log", // newly added
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,//true显示外置的控制台窗口，false显示内置终端
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/local/bin/gdb", 
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ],
+    // newly added
+    // "inputs": [
+    //     {
+    //       "id": "coreFileName",
+    //       "type": "promptString",
+    //       "description": "Enter core file path"
+    //     }
+    //   ]
+      // newly added
+}
+
+/*
+    "configurations": [
+        {
+            "type": "cppdbg",
+            "request": "launch",
+            "name": "Open a core dump(c/c++)",
+            "program": "<Path to the program here>",
+            "coreDumpPath": "${input:coreFileName}",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "lldb" // or gdb, if you are using gdb
+        }
+    ],
+    "inputs": [
+      {
+        "id": "coreFileName",
+        "type": "promptString",
+        "description": "Enter core file path"
+      }
+    ]*/

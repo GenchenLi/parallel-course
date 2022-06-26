@@ -241,8 +241,8 @@ struct BigInt {
     int val_;
     inline static const int zero = 0;
 
-    friend std::ostream& operator<<(std::ostream& __cout, const BigInt& ins) {
-        __cout << ins.val_ << std::endl;
+    std::ostream& operator<<(std::ostream& __cout) {
+        __cout << val_ << std::endl;
     }
     BigInt& operator+=(const BigInt& src) {
         val_ += src.val_;
@@ -270,200 +270,21 @@ T accum(T* begin, T* end) {
     return rlt;
 }
 
-/*Stack类相关*/
-#include <vector>
-#include <cassert>
-
-// template<typename T>
-template<typename T, template<typename ElemType> class Cont = std::vector>
-class Stack {
-  private:
-    // std::vector<T> elems;      // elements
-    Cont<T> elems;
-  public:
-    void push(T const& elem);  // push element
-    void pop();                // pop element
-    T const& top() const;      // return top element
-    bool empty() const {       // return whether the stack is empty
-        return elems.empty();
-    }
-    template<typename T2>
-    Stack<T>& operator=(const Stack<T2> opstack) {
-        Stack<T2> tmp(opstack);
-        elems.clear();
-        while (!(tmp.empty())) {
-            push(tmp.top());
-            tmp.pop();
-        }
-        return *this;
-    }
-};
-
-/*判断两个类别类型是否相同*/
-template<typename T1, typename T2>
-struct issametype {
-    const static bool value = false;
-};
-template<typename T>
-struct issametype<T, T> {
-    const static bool value = true;
-};
-/*判断两个类别类型是否相同*/
-// template<typename T>
-template<typename T, template<typename ElemType> class Cont> 
-// void Stack<T>::push (T const& elem)
-void Stack<T, Cont>::push (T const& elem)
-{
-    elems.push_back(elem);     // append copy of passed elem
-}
-
-// template<typename T>
-// void Stack<T>::pop ()
-template<typename T, template<typename ElemType> class Cont> 
-// void Stack<T>::push (T const& elem)
-void Stack<T, Cont>::pop()
-{
-    assert(!elems.empty());
-    elems.pop_back();          // remove last element
-}
-
-// template<typename T>
-template<typename T, template<typename ElemType> class Cont> 
-// T const& Stack<T>::top () const
-T const& Stack<T, Cont>::top () const
-{
-    assert(!elems.empty());
-    return elems.back();       // return copy of last element
-}
-/*Stack类相关end*/
 /*序列求和*/
 /*My tuple*/
-
-/*测试空类相关*/
-class Empty {
-};
-class Empty1: public Empty {
-
-};
-class Empty2: public Empty1 {
-};
-/*测试空类相关 end*/
-
-/*打印任意容器：函数模板*/
-template<typename Container>
-std::ostream& printcontainer(const Container ct, std::ostream& _cout = std::cout) {
-    auto itr = ct.begin();
-    while (itr != ct.end()) {
-        _cout << *itr << std::endl;
-        itr++;
-    }
-    return _cout;
-}
-/*打印任意容器：函数模板end*/
-
-/*迭代器向前移动的不同特化版本*/
-#include <iterator>
-template<typename Iterator, typename Distance>
-void IteratorAdvance(Iterator itr, Distance n) {
-    IteratorAdvanceImpl(itr, n, typename std::iterator_traits<Iterator>::iterator_category());
-}
-
-template<typename Iterator, typename Distance>
-void IteratorAdvanceImpl(Iterator iter, Distance n, std::input_iterator_tag) {
-    while (n > 0) {
-        iter++;
-        n--;
-    }
-}
-
-template<typename Iterator, typename Distance>
-void IteratorAdvanceImpl(Iterator iter, Distance n, std::random_access_iterator_tag) {
-    iter += n;
-}
-
-// static int a = 100;
-// constexpr int addtest(int val) {
-//     return a++ + val;
-// }
-
-/*输入是类型，输出是*/
-
-/*实现计数器，记录这个类的实例目前现存多少个*/
-template<typename T>
-class Counter {
-    public:
-        inline static int count = 0;
-    Counter() {
-        count++;
-    }
-    Counter(const Counter&) {
-        count++;
-    }
-    Counter(Counter&&) {
-        count++;
-    }
-    ~Counter() {
-        count--;
-    }
-};
-/*提供的测试类*/
-class MyTestCls: public Counter<MyTestCls> {
-
-};
-/**/
-/**/
 int main() {
-    /*测试accm*/
-//     int a[] = {1, 2, 3, 4, 5};
-//     std::cout << accum(a, a + (sizeof(a) / sizeof(a[0]))) / (sizeof(a) / sizeof(a[0])) << std::endl;
-//     char st[] = "templates";
-//     std::cout << accum(st, st + sizeof(st) - 1) << std::endl; // / (sizeof(st) - 1) << std::endl;
-//     BigInt arr[] = {BigInt(1), BigInt(2), BigInt(3), BigInt(4), BigInt(5)};
-//     std::cout << accum(arr, arr + 5) << std::endl;
-//     // std::cout << (-49) / 9;
-//     /*测试accm end*/
-//     Stack<int>         intStack;       // stack of ints
-//     Stack<std::string> stringStack;    // stack of strings
-  
-//     // manipulate int stack
-//     intStack.push(7);
-//     std::cout << intStack.top() << '\n';
-  
-//     // manipulate string stack
-//     stringStack.push("hello");
-//     std::cout << stringStack.top() << '\n';
-//     stringStack.pop();
-//     Stack<double> doublestack;
-//     doublestack.push(2.5);
-//     intStack = doublestack;
-//     std::cout << intStack.top() << '\n';
-//     // intStack = stringStack;
-//     /*测试issametype*/
-//     std::cout << issametype<int, int>::value << '\n';
-//     /*测试issametype*/
-// /*My tuple*/
-//     // Check(Func);
-//     // Check(Func);//error
-//     // Check(*Func);//error
-//     // std::vector<double> vec;
-//     // printele_type(vec);
-    
-//     /*测试空类的大小*/
-//     std::cout << sizeof(Empty) << std::endl;
-//     std::cout << sizeof(Empty1) << std::endl;
-//     std::cout << sizeof(Empty2) << std::endl;
-//     /*测试空类的大小结束*/
-
-//     /*打印任意的stl*/
-//     std::vector<int> vec_int{1, 2, 3};
-//     std::cout << "print vec" << std::endl;
-//     printcontainer(vec_int);
-    /*打印任意的stl结束*/
-   {
-        MyTestCls a;
-        MyTestCls b;
-        std::cout << MyTestCls::count << std::endl;
-   } 
-   std::cout << MyTestCls::count << std::endl; 
+    int a[] = {1, 2, 3, 4, 5};
+    std::cout << accum(a, a + (sizeof(a) / sizeof(a[0]))) / (sizeof(a) / sizeof(a[0])) << std::endl;
+    char st[] = "templates";
+    std::cout << accum(st, st + sizeof(st) - 1) << std::endl; // / (sizeof(st) - 1) << std::endl;
+    BigInt arr[] = {BigInt(1), BigInt(2), BigInt(3), BigInt(4), BigInt(5)};
+    std::cout << accum(arr, arr + 5) << std::endl;
+    // std::cout << (-49) / 9;
+/*My tuple*/
+    // Check(Func);
+    // Check(Func);//error
+    // Check(*Func);//error
+    // std::vector<double> vec;
+    // printele_type(vec);
 }
 

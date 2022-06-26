@@ -459,11 +459,9 @@ int main() {
 //     std::cout << "print vec" << std::endl;
 //     printcontainer(vec_int);
     /*打印任意的stl结束*/
-   {
-        MyTestCls a;
-        MyTestCls b;
-        std::cout << MyTestCls::count << std::endl;
-   } 
-   std::cout << MyTestCls::count << std::endl; 
+    
+    MyTestCls a;
+    MyTestCls b;
+
 }
 

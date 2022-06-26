@@ -464,6 +464,6 @@ int main() {
         MyTestCls b;
         std::cout << MyTestCls::count << std::endl;
    } 
-   std::cout << MyTestCls::count << std::endl; 
+    
 }
 
