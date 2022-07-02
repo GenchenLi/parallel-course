@@ -226,7 +226,7 @@ template<>
 struct AccumT<char> {
     using AccT = int;
     static const AccT zero = 0;
-    static constexpr AccT zero_func() {
+    static constexpr AccT zero() {
         return 0;
     }
 };

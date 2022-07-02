@@ -226,9 +226,6 @@ template<>
 struct AccumT<char> {
     using AccT = int;
     static const AccT zero = 0;
-    static constexpr AccT zero_func() {
-        return 0;
-    }
 };
 template<>
 struct AccumT<int> {
@@ -291,8 +288,8 @@ class Stack {
     bool empty() const {       // return whether the stack is empty
         return elems.empty();
     }
-    template<typename T2, template<typename ElemType> class Cont1 = std::vector>
-    Stack<T, Cont>& operator=(const Stack<T2, Cont1>& opstack);   // {
+    template<typename T2>
+    Stack<T>& operator=(const Stack<T2>& opstack);   // {
     //     /*旧的写法*/
     //     // Stack<T2> tmp(opstack);
     //     // elems.clear();
@@ -309,12 +306,11 @@ class Stack {
     //     elems.insert(elems.begin(), opstack.elems.begin(), opstack.elems.end());
     //     return *this;
     // }
-    // template<typename T2, template<typename ElemType> class Cont1> friend class Stack;
-    template<typename, template<typename> class> friend class Stack;
+    template<typename T2, template<typename ElemType> class Cont1> friend class Stack;
 };
-template<typename T, template<typename ElemType> class Cont>
-    template<typename T2, template<typename ElemType> class Cont1>
-     Stack<T, Cont>& Stack<T, Cont>::operator=(const Stack<T2, Cont1>& opstack) {
+template<typename T>
+    template<typename T2, template<typename ElemType> class Cont1> = = std::vector>>
+     Stack<T>& Stack<T>::operator=(const Stack<T2, Cont1 & opstack) {
         /*旧的写法*/
         // Stack<T2> tmp(opstack);
         // elems.clear();

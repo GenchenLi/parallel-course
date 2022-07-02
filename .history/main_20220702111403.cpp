@@ -226,9 +226,6 @@ template<>
 struct AccumT<char> {
     using AccT = int;
     static const AccT zero = 0;
-    static constexpr AccT zero_func() {
-        return 0;
-    }
 };
 template<>
 struct AccumT<int> {
@@ -291,46 +288,18 @@ class Stack {
     bool empty() const {       // return whether the stack is empty
         return elems.empty();
     }
-    template<typename T2, template<typename ElemType> class Cont1 = std::vector>
-    Stack<T, Cont>& operator=(const Stack<T2, Cont1>& opstack);   // {
-    //     /*旧的写法*/
-    //     // Stack<T2> tmp(opstack);
-    //     // elems.clear();
-    //     // elems.insert(elems.begin(), opstack.elems.begin(), opstack.elems.begin.end)
-    //     // // while (!(tmp.empty())) {
-    //     // //     push(tmp.top());
-    //     // //     tmp.pop();
-    //     // // }
-    //     //  return *this;
-    //     /*旧的写法 end*/
-
-    //     /*新的写法*/
-    //     elems.clear();
-    //     elems.insert(elems.begin(), opstack.elems.begin(), opstack.elems.end());
-    //     return *this;
-    // }
-    // template<typename T2, template<typename ElemType> class Cont1> friend class Stack;
-    template<typename, template<typename> class> friend class Stack;
-};
-template<typename T, template<typename ElemType> class Cont>
-    template<typename T2, template<typename ElemType> class Cont1>
-     Stack<T, Cont>& Stack<T, Cont>::operator=(const Stack<T2, Cont1>& opstack) {
-        /*旧的写法*/
-        // Stack<T2> tmp(opstack);
-        // elems.clear();
-        // elems.insert(elems.begin(), opstack.elems.begin(), opstack.elems.begin.end)
-        // // while (!(tmp.empty())) {
-        // //     push(tmp.top());
-        // //     tmp.pop();
-        // // }
-        //  return *this;
-        /*旧的写法 end*/
-
-        /*新的写法*/
+    template<typename T2>
+    Stack<T>& operator=(const Stack<T2> opstack) {
+        Stack<T2> tmp(opstack);
         elems.clear();
-        elems.insert(elems.begin(), opstack.elems.begin(), opstack.elems.end());
+        while (!(tmp.empty())) {
+            push(tmp.top());
+            tmp.pop();
+        }
         return *this;
     }
+};
+
 /*判断两个类别类型是否相同*/
 template<typename T1, typename T2>
 struct issametype {
@@ -442,8 +411,156 @@ class Counter {
 class MyTestCls: public Counter<MyTestCls> {
 
 };
-/**/
-/**/
+
+/*实现简单的std::function*/
+#include <algorithm>
+// template<typename R, typename... Args>
+// class FunctorBridge
+// {
+//   public:
+//     virtual ~FunctorBridge() {
+//     }
+//     virtual FunctorBridge* clone() const = 0;
+//     virtual R invoke(Args... args) const = 0;
+// };
+
+// /*FunctorBridge的偏特化*/
+// template<typename Functor, typename R, typename... Args>
+// class SpecificFunctorBridge : public FunctorBridge<R, Args...> {
+//   Functor functor;
+
+//  public:
+//   template<typename FunctorFwd>
+//   SpecificFunctorBridge(FunctorFwd&& functor)
+//     : functor(std::forward<FunctorFwd>(functor)) {
+//   }
+//   virtual SpecificFunctorBridge* clone() const override {
+//     return new SpecificFunctorBridge(functor);
+//   }
+//   virtual R invoke(Args... args) const override {
+//     return functor(std::forward<Args>(args)...);
+//   }
+// };
+/*FunctorBridge的偏特化 end*/
+template<typename R, typename... Args>
+class FunctorBridge {
+    public:
+        virtual ~FunctorBridge() {
+        }
+        virtual FunctorBridge* clone() = 0;
+        virtual R invoke(Args... args) = 0;
+};
+
+template<typename Functor, typename R, typename... Args>
+class SpecificFunctorBridge: public FunctorBridge<R, Args...> {
+    private:
+        Functor functor_;
+    public:
+};
+/*自己实现一遍FunctorBridge*/
+
+// primary template: Functionptr相关
+template<typename Signature> 
+class FunctionPtr;
+
+// partial specialization:
+template<typename R, typename... Args> 
+class FunctionPtr<R(Args...)>
+{
+ private:
+  FunctorBridge<R, Args...>* bridge;
+ public:
+  // constructors:
+    FunctionPtr() : bridge(nullptr) {
+    }
+    FunctionPtr(const FunctionPtr& other) {
+        bridge = other.bridge->clone();
+    }
+    FunctionPtr(FunctionPtr& other) : FunctionPtr(static_cast<const FunctionPtr&>(other){
+    }
+    FunctionPtr(const FunctionPtr&& other) {
+        bridge = other.bridge;
+        other.bridge = nullptr;
+    }
+
+
+    FunctionPtr& operator=(FunctionPtr&& other) {
+        if (nullptr != bridge) {
+            delete bridge;
+        }
+        bridge = other.bridge;
+        other.bridge = nullptr;
+        return *this;
+
+    }
+        /*拷贝赋值：写的不好，看下面的注释掉的部分！！！*/
+    FunctionPtr& operator=(FunctionPtr& other) {
+        /*原先的写法*/
+        // delete bridge;
+        // bridge = other.bridge->clone();
+        // return *this;
+        /*原先的写法 end*/
+        FunctionPtr tmp(other);
+        swap(*this, tmp);
+        return *this;
+    }
+    friend void swap(FunctionPtr& op1, FunctionPtr& op2) {
+        std::swap(op1.bridge, op2.bridge);
+    }
+
+//   FunctionPtr() : bridge(nullptr) {
+//   }
+//   FunctionPtr(FunctionPtr const& other);    // see functionptr-cpinv.hpp
+//   FunctionPtr(FunctionPtr& other) 
+//     : FunctionPtr(static_cast<FunctionPtr const&>(other)) { 
+//   }
+//   FunctionPtr(FunctionPtr&& other) : bridge(other.bridge) {
+//     other.bridge = nullptr;
+//   }
+//   // construction from arbitrary function objects:
+//   // template<typename F> FunctionPtr(F&& f);  // see functionptr-init.hpp
+// template<typename F> FunctionPtr(F&& f): bridge(nullptr)  {  // see functionptr-init.hpp
+//     using Functor = std::decay_t<F>;
+//     using Bridge = SpecificFunctorBridge<Functor, R, Args...>;
+//     // bridge = new Bridge(f); // 写的也不对！！
+//     // bridge = new SpecificFunctorBridge<F, R, Args...>(f);  // 这么写是不对的，不知道f是否是引用类型的，
+// }
+//   // assignment operators:
+//   FunctionPtr& operator=(FunctionPtr const& other) {
+//     FunctionPtr tmp(other);
+//     swap(*this, tmp);
+//     return *this;
+//   }
+//   FunctionPtr& operator=(FunctionPtr&& other) {
+//     delete bridge;
+//     bridge = other.bridge;
+//     other.bridge = nullptr;
+//     return *this;
+//   }
+//   // construction and assignment from arbitrary function objects:
+//   template<typename F> FunctionPtr& operator=(F&& f) {
+//     FunctionPtr tmp(std::forward<F>(f));
+//     swap(*this, tmp);
+//     return *this;
+//   }
+
+//   // destructor:
+//   ~FunctionPtr() { 
+//     delete bridge; 
+//   }
+
+//   friend void swap(FunctionPtr& fp1, FunctionPtr& fp2) {
+//     std::swap(fp1.bridge, fp2.bridge);
+//   }
+//   explicit operator bool() const {
+//     return bridge == nullptr;
+//   }
+
+//   // invocation:
+//   R operator()(Args... args) const;         // see functionptr-cpinv.hpp
+ };
+
+/*简单的std::function end*/
 int main() {
     /*测试accm*/
 //     int a[] = {1, 2, 3, 4, 5};
@@ -471,7 +588,6 @@ int main() {
     doublestack.push(2.5);
     intStack = doublestack;
     std::cout << intStack.top() << '\n';
-    return 0;
     // intStack = stringStack;
 /*测试Stack类 end*/
 

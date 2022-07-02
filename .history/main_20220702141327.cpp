@@ -226,9 +226,6 @@ template<>
 struct AccumT<char> {
     using AccT = int;
     static const AccT zero = 0;
-    static constexpr AccT zero_func() {
-        return 0;
-    }
 };
 template<>
 struct AccumT<int> {
@@ -310,7 +307,7 @@ class Stack {
     //     return *this;
     // }
     // template<typename T2, template<typename ElemType> class Cont1> friend class Stack;
-    template<typename, template<typename> class> friend class Stack;
+    template<typename, template<typename ElemType> class Cont1> friend class Stack;
 };
 template<typename T, template<typename ElemType> class Cont>
     template<typename T2, template<typename ElemType> class Cont1>
